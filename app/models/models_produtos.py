@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from typing import List
 
+
 # Modelo base para produto
 class ProdutoBase(BaseModel):
     nome: str
@@ -11,6 +12,7 @@ class ProdutoBase(BaseModel):
 # Modelo para criar um produto
 class CriarProduto(ProdutoBase):
     pass
+
 
 # Modelo de produto com ID
 class Produto(ProdutoBase):
