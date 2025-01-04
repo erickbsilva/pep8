@@ -20,10 +20,10 @@ def criar_usuario(nome: str) -> Usuario:
     Returns:
         Usuario: O objeto do usuário recém-criado com um ID gerado.
     """
-    global ContadorUsuario
-    novo_usuario = Usuario(id=ContadorUsuario, nome=nome)
-    Usuarios.append(novo_usuario)
-    ContadorUsuario += 1
+    global contador_usuario
+    novo_usuario = Usuario(id=contador_usuario, nome=nome)
+    usuarios.append(novo_usuario)
+    contador_usuario += 1
     return novo_usuario
 
 
@@ -37,4 +37,4 @@ def listar_usuarios() -> List[Usuario]:
     Returns:
         List[Usuario]: Uma lista de objetos de usuários cadastrados.
     """
-    return Usuarios
+    return usuarios

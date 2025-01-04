@@ -30,7 +30,7 @@ def criar_produto(produto: CriarProduto) -> Produto:
     """
     global contador_produto
     novo_produto = Produto(id=contador_produto, **produto.model_dump())
-    Produtos.append(novo_produto)
+    produtos.append(novo_produto)
     contador_produto += 1
     return novo_produto
 
@@ -45,7 +45,7 @@ def listar_produtos() -> List[Produto]:
     Returns:
         List[Produto]: Uma lista de objetos de produtos cadastrados.
     """
-    return Produtos
+    return produtos
 
 
 # Rota para simular a criação do histórico de compras de um usuário
@@ -63,9 +63,9 @@ def adicionar_historico_compras(
     Returns:
         dict: Mensagem indicando que o histórico de compras foi atualizado.
     """
-    if usuario_id not in [usuario.id for usuario in Usuarios]:
+    if usuario_id not in [usuario.id for usuario in usuarios]:
         raise HTTPException(status_code=404, detail="Usuário não encontrado")
-    HistoricoDeCompras[usuario_id] = compras.produtos_ids
+    historico_de_compras[usuario_id] = compras.produtos_ids
     return {"mensagem": "Histórico de compras atualizado"}
 
 
@@ -85,7 +85,7 @@ def recomendar_produtos(usuario_id: int, preferencias: Preferencias) -> List[Pro
         List[Produto]: Uma lista de produtos recomendados com base no histórico de compras e preferências.
     """
     try:
-        if usuario_id not in HistoricoDeCompras:
+        if usuario_id not in historico_de_compras:
             raise HTTPException(
                 status_code=404, detail="Histórico de compras não encontrado"
             )
@@ -96,16 +96,16 @@ def recomendar_produtos(usuario_id: int, preferencias: Preferencias) -> List[Pro
 
         produtos_recomendados = [
             produto
-            for produto_id in HistoricoDeCompras[usuario_id]
-            for produto in Produtos
+            for produto_id in historico_de_compras[usuario_id]
+            for produto in produtos
             if produto.id == produto_id
         ]
 
         # Filtrar as recomendações com base nas preferências
-        produtos_recomendados = [
+        produtos_recomendados_categorias = [
             produto
             for produto in produtos_recomendados
-            if p.categoria in preferencias.categorias
+            if produto.categoria in preferencias.categorias
         ]  # Preferencias de categorias
         # produtos_recomendados = [
         #     p
@@ -123,7 +123,5 @@ def recomendar_produtos(usuario_id: int, preferencias: Preferencias) -> List[Pro
                     break
 
         return produtos_recomendados_filtrados
-
-        return produtos_recomendados
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
